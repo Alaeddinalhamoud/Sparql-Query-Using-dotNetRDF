@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "File Uploder";
+}
+<br />
+@*Info Messages start*@
+
+<div id="filetype" style="display:none;">
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Info!</strong> The file type allowed is .owl
+    </div>
+</div>
+
+<div id="infosuccess" style="display:none;">
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Info!</strong> File has been uploaded Successfully
+    </div>
+</div>
+<div id="infoerror" style="display:none;">
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Error!</strong> Error while uploading.
+        <div id="errorId">
+        </div>
+
+    </div>
+</div>
+@*Info Messages End*@
+<br />
+<div class="panel panel-primary">
+
+    <div class="panel-heading"> <i class="glyphicon glyphicon-picture"></i>  File Uploader</div>
+    <div class="panel-body">
+
+     
+
+        @*Upload*@
+        <input type="file" id="Uploader" />
+        <br />
+         
+    </div>
+</div> 
+
+
+@section Scripts {
+    <script>
+        $("#Uploader").change(function () {
+                    var data = new FormData();
+                    var files = $("#Uploader").get(0).files;
+                    if (files.length > 0) {
+                        data.append("MyFile", files[0]);
+                    }
+
+                    $.ajax({
+                        url: "/UploadFile/Upload",
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: data,
+                        success: function (response) {
+
+                            if (response == "false") {
+                                $("#filetype").show();
+                            } else{
+                            //code after success
+                            $("#infosuccess").show();
+                            setTimeout(function () {
+                             $("#infosuccess").remove();
+                            }, 5000);
+                            }
+                        },
+                        error: function (er) {
+                            $("#infoerror").show();
+                            $("#errorId").text(er);
+                            setTimeout(function () {
+                                $("#infoerror").remove();
+                            }, 5000);
+                            alert(er);
+                        }
+
+                    });
+
+                });
+
+    </script>
+}

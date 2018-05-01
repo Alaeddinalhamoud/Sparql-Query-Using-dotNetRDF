@@ -1,0 +1,53 @@
+﻿@model RDFMVC.Models.Query
+@{
+    ViewBag.Title = "Query...";
+}
+@*Style File for the textarea*@
+<link href="~/Scripts/CodeMirror/theme/blackboard.css" rel="stylesheet" />
+
+<br />
+
+<div class="panel panel-primary">
+    <div class="panel-heading"> <i class="glyphicon glyphicon-cog"></i>
+    @TempData["FileName"]
+    </div>
+
+    @using (Ajax.BeginForm("ExecuteQuery", "RDFQuery", new AjaxOptions
+    {
+        HttpMethod = "GET",
+        UpdateTargetId = "divQuery",
+        LoadingElementId = "waitimage"
+    }))
+    {
+        <div class="panel-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.query, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.query, "", new { @class = "text-danger" })
+
+
+        </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary" aria-label="Left Align">
+                  <span class="fa fa fa-pencil-square-o" aria-hidden="true"> </span> Run
+                 </button>
+             </div>
+    }
+           
+        </div>
+  
+
+<img id="waitimage" src="~/Images/loadingicon.gif" style="display:none" />
+<br />
+<div id="divQuery">
+</div>
+
+        @section Scripts { 
+            <script> 
+                var editor = CodeMirror.fromTextArea(document.getElementById("query"), {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    mode: "text/x-csharp",
+                    theme: "blackboard"
+                });  
+            </script> 
+        }

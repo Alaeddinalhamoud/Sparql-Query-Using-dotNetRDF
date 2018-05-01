@@ -1,0 +1,102 @@
+﻿ @model RDFMVC.Models.ResultSet 
+<link href="~/Content/Site.css" rel="stylesheet" /> 
+<h4>Query Result</h4>
+<div class="container">
+    @{ 
+        if (TempData["message"] != null)
+        {
+            if (TempData["message"].Equals("ChooseDb"))
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error !</strong> You have to Upload your OWL Files or Choose one from RDF File Tab.
+                </div>
+            } 
+            if (TempData["message"].Equals("EmptyQuery"))
+            {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>alert !</strong> Your Query is Empty.
+        </div>
+            }
+            if (TempData["message"].Equals("Syntaxerror")) {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error !</strong> You Have Syntax Error.
+        </div> 
+                } 
+            } 
+        }
+</div>  
+<br />
+  
+<div class="table-responsive" id="dvData">
+    <table class="table table-bordered table-responsive table-hover table-striped" id="tblData">
+        <caption>asdsa</caption>
+        @{ 
+            if(Model.Columns != null) { 
+            <thead class="thead-light">
+                <tr>
+                    @foreach (var _Column in Model.Columns)
+                    {
+                        <th>
+                             @Html.DisplayFor(col => _Column)
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @while(Model.Rows.Count()>0)
+                {
+                    <tr>
+                      @for (int i = 1; i <= Model.Columns.Count(); i++)
+                      {
+                            <td>
+                                @Model.Rows.Dequeue()
+                            </td> 
+                        } 
+                    </tr> 
+                }
+            </tbody>
+            }
+            } 
+    </table> 
+   
+</div>
+ <div id="paging" class="pagination pagination-sm"></div> 
+
+        <script>  
+        $(document).ready(function () { 
+            var totalRows = $('#tblData').find('tbody tr:has(td)').length;
+            var recordPerPage = 20;//Elements in one Page
+            var totalPages = Math.ceil(totalRows / recordPerPage);
+            var $pages = $('<div id="pages"></div>');
+            for (i = 0; i < totalPages; i++) {
+                $('<span class="pageNumber">&nbsp;' + (i + 1) + '</span>').appendTo($pages);
+            }
+            $pages.appendTo('#paging'); 
+            $('.pageNumber').hover(
+                function () {
+                    $(this).addClass('focus');
+                },
+                function () {
+                    $(this).removeClass('focus');
+                }
+            ); 
+            $('table').find('tbody tr:has(td)').hide();
+            var tr = $('table tbody tr:has(td)');
+            for (var i = 0; i <= recordPerPage - 1; i++) {
+                $(tr[i]).show();
+            }
+            $('span').click(function (event) {
+                $('#tblData').find('tbody tr:has(td)').hide();
+                var nBegin = ($(this).text() - 1) * recordPerPage;
+                var nEnd = $(this).text() * recordPerPage - 1;
+                for (var i = nBegin; i <= nEnd; i++) {
+                    $(tr[i]).show();
+                }
+            });  
+        }); 
+    </script>
+
+ 
