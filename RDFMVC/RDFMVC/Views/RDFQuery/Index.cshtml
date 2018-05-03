@@ -4,6 +4,7 @@
 }
 @*Style File for the textarea*@
 <link href="~/Scripts/CodeMirror/theme/blackboard.css" rel="stylesheet" />
+<link href="~/Content/Loader1.css" rel="stylesheet" />
 
 <br />
 
@@ -15,8 +16,7 @@
     @using (Ajax.BeginForm("ExecuteQuery", "RDFQuery", new AjaxOptions
     {
         HttpMethod = "GET",
-        UpdateTargetId = "divQuery",
-        LoadingElementId = "waitimage"
+        UpdateTargetId = "divQuery"
     }))
     {
         <div class="panel-body">
@@ -38,11 +38,32 @@
 
 <img id="waitimage" src="~/Images/loadingicon.gif" style="display:none" />
 <br />
+@*Loading Image*@
+<div id="wait" style="display:none;width:100px;height:100px; position:absolute;top:50%;left:50%;">
+    <div id="cssload-pgloading">
+        <div class="cssload-loadingwrap">
+            <ul class="cssload-bokeh">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div id="divQuery">
 </div>
 
         @section Scripts { 
             <script> 
+
+                $(document).ajaxStart(function () {
+                    $("#wait").css("display", "block");
+                });
+                $(document).ajaxComplete(function () {
+                    $("#wait").css("display", "none");
+                });
+
                 var editor = CodeMirror.fromTextArea(document.getElementById("query"), {
                     lineNumbers: true,
                     matchBrackets: true,

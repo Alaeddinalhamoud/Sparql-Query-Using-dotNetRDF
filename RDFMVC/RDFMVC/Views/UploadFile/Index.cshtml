@@ -1,7 +1,12 @@
-﻿
+﻿@model RDFMVC.Models.RdfFile
 @{
     ViewBag.Title = "File Uploder";
 }
+<link href="~/Content/Loader1.css" rel="stylesheet" />
+
+
+
+
 <br />
 @*Info Messages start*@
 
@@ -29,28 +34,64 @@
 </div>
 @*Info Messages End*@
 <br />
-<div class="panel panel-primary">
+ 
+        <div class="panel panel-primary">
 
-    <div class="panel-heading"> <i class="glyphicon glyphicon-picture"></i>  File Uploader</div>
-    <div class="panel-body">
+            <div class="panel-heading"> <i class="glyphicon glyphicon-picture"></i>  File Uploader</div>
+            <div class="panel-body">
+                @*Loading Image*@
+                @*<div id="wait1" style="display:none;width:200px;height:200px; position:absolute;top:50%;left:50%;padding:2px;"><img src='~/Images/8pm76v.gif' width="200" height="200" /><br>Loading..</div>*@
 
-     
+                <div id="wait" style="display:none;width:100px;height:100px; position:absolute;top:50%;left:50%;">
+                    <div id="cssload-pgloading">
+                        <div class="cssload-loadingwrap">
+                            <ul class="cssload-bokeh">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                @*Upload*@
+                <input type="file" id="Uploader" />
+                <hr />
+                @*CheckBoxFor IsPublic*@
+                @Html.LabelFor(m => m.IsPublic)
+                @Html.CheckBoxFor(m => m.IsPublic)
+                <br /> 
+            </div>
+        </div>
 
-        @*Upload*@
-        <input type="file" id="Uploader" />
-        <br />
-         
-    </div>
-</div> 
+        <div class="form-group">
+            <div class="col-md-12 input-group">
+                <button id="btn_Uploader" type="submit" class="btn btn-primary" aria-label="Left Align">
+                    <span class="fa fa fa-pencil-square-o" aria-hidden="true"> </span> Upload
+                </button>
+            </div>
+        </div>
+
+ 
+
+        @section Scripts {
+            <script>
+
+                $(document).ajaxStart(function () {
+                    $("#wait").css("display", "block");
+                });
+                $(document).ajaxComplete(function () {
+                    $("#wait").css("display", "none");
+                });
 
 
-@section Scripts {
-    <script>
-        $("#Uploader").change(function () {
+                $("#btn_Uploader").click(function () {
                     var data = new FormData();
                     var files = $("#Uploader").get(0).files;
+                    var IsPublis = $("#IsPublic").is(':checked');
                     if (files.length > 0) {
                         data.append("MyFile", files[0]);
+                        data.append("IsPublic", IsPublis)
                     }
 
                     $.ajax({
@@ -63,12 +104,12 @@
 
                             if (response == "false") {
                                 $("#filetype").show();
-                            } else{
-                            //code after success
-                            $("#infosuccess").show();
-                            setTimeout(function () {
-                             $("#infosuccess").remove();
-                            }, 5000);
+                            } else {
+                                //code after success
+                                $("#infosuccess").show();
+                                setTimeout(function () {
+                                    $("#infosuccess").remove();
+                                }, 5000);
                             }
                         },
                         error: function (er) {
@@ -84,5 +125,5 @@
 
                 });
 
-    </script>
-}
+            </script>
+        }

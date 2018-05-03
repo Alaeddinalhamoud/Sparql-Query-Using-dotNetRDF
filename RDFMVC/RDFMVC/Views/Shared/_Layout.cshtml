@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -27,7 +28,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Rdf Files", "LoadXMLFile", "UploadFile")</li>
+                    <li>@Html.ActionLink("Rdf Files", "LoadOwlPublicFiles", "UploadFile")</li>
+                   @if (Request.IsAuthenticated)
+                    {
+                    <li>@Html.ActionLink("My Rdf Files", "LoadMyOwlFiles", "UploadFile")</li>
+                    }
                     <li>@Html.ActionLink("Query", "Index", "RDFQuery")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                    
