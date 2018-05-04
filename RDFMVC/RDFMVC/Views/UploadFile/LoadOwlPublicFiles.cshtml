@@ -23,6 +23,9 @@
             <table class="table">
                 <tr>
                     <th>
+                        @Html.DisplayNameFor(model => model.FileId)
+                    </th>
+                    <th>
                         @Html.DisplayNameFor(model => model.FileName)
                     </th>
                     <th>
@@ -41,6 +44,9 @@
             {
                     <tr>
                         <td>
+                            @Html.DisplayFor(modelItem => item.FileId)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.FileName)
                         </td>
                         <td>
@@ -57,7 +63,7 @@
                              {
                             @Html.ActionLink("Delete", "Delete", new { id = item.FileId }) 
                              } |
-                            @Html.ActionLink("Select File", "SelectFile", new { id = item.FileName })
+                            @Html.ActionLink("Select File", "SelectFile", new { id = item.FileId })
                         </td>
                     </tr>
                 }

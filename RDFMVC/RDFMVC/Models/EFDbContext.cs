@@ -9,5 +9,6 @@ namespace RDFMVC.Models
     public class EFDbContext: DbContext
     {
         public DbSet<RdfFile> RdfFiles { get; set; }
+        public DbSet<Session> Sessions { get; set; }
     }
 }

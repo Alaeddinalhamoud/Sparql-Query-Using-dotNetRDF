@@ -12,10 +12,12 @@ namespace RDFMVC.Controllers
     public class UploadFileController : Controller
     {
         private readonly IRdfFile _IRdfFile;
+        private readonly ISession _ISession;
 
-        public UploadFileController(IRdfFile _repo)
+        public UploadFileController(IRdfFile _IRdfFileRepo, ISession _SessionRepo)
         {
-            _IRdfFile = _repo;
+            _IRdfFile = _IRdfFileRepo;//To add owl File to the DB.
+            _ISession = _SessionRepo;//To Create Seesion for the User and save the attached owl file.
         }
         // GET: UploadFile
         [Authorize]
@@ -166,27 +168,46 @@ namespace RDFMVC.Controllers
         //}
 
 
-        public ActionResult SelectFile(string id)
+        public ActionResult SelectFile(int Id)
         {
-            AttachOWLFile(id); 
+            AttachOWLFile(Id); 
             return RedirectToAction("LoadOwlPublicFiles"); 
         }
 
-        public void AttachOWLFile(string filename)
+        public void AttachOWLFile(int? FileId)
         {
-            string realPath;
-            realPath = Server.MapPath("~/DataSets/AttachedDB.xml"); 
-            XmlWriter writer = XmlWriter.Create(realPath);
-            writer.WriteStartDocument(); 
-            writer.WriteStartElement("Files");
-            writer.WriteStartElement("File");
-            writer.WriteAttributeString("name", filename); 
-            writer.WriteEndElement();
-            writer.WriteEndDocument(); 
-            writer.Flush();
-            writer.Close(); 
-            TempData["message"] = string.Format("You Have Select the File" + " " + filename);
+            Session model = new Session();
+
+           if(FileId != null)
+            {
+                model.UserId = User.Identity.Name;
+                model.FileId = FileId.Value;
+                model.CreatedDate = DateTime.Now;
+                model.UpdateDate = DateTime.Now;//Same as CreateTime means no update.
+
+                _ISession.Save(model);
+                TempData["message"] = string.Format("You Have Select the File Number #" + FileId.Value);
+            }
+
+          
         }
+
+        //Old Version 1.5
+        //public void AttachOWLFile(string filename)
+        //{
+        //    string realPath;
+        //    realPath = Server.MapPath("~/DataSets/AttachedDB.xml"); 
+        //    XmlWriter writer = XmlWriter.Create(realPath);
+        //    writer.WriteStartDocument(); 
+        //    writer.WriteStartElement("Files");
+        //    writer.WriteStartElement("File");
+        //    writer.WriteAttributeString("name", filename); 
+        //    writer.WriteEndElement();
+        //    writer.WriteEndDocument(); 
+        //    writer.Flush();
+        //    writer.Close(); 
+        //    TempData["message"] = string.Format("You Have Select the File" + " " + filename);
+        //}
 
     }
 }

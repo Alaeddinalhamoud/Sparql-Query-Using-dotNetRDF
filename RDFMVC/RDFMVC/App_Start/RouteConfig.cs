@@ -14,11 +14,12 @@ namespace RDFMVC
            // routes.IgnoreRoute("Document/Folder/{*path}.{extension}");
           routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
+            //Old Version 1.5
+          /*  routes.MapRoute(
               name: "SelectFileRoute",
               url: "{controller}/{action}",
               defaults: new { controller = "UploadFile", action = "SelectFile" }
-          );
+          ); */
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

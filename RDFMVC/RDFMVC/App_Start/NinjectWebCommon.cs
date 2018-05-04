@@ -66,7 +66,7 @@ namespace RDFMVC.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IRdfFile>().To<EFRdfFile>();
-            
+            kernel.Bind<ISession>().To<EFSession>();            
         }
     }
 }
