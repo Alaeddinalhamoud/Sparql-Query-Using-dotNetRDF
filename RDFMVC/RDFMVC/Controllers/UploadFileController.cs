@@ -31,7 +31,7 @@ namespace RDFMVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadGateway);
             }
             RdfFile model = _IRdfFile.Details(Id);
-
+            
             if (model == null)
             {
                 return HttpNotFound();
@@ -42,11 +42,21 @@ namespace RDFMVC.Controllers
         [Authorize]
         public ActionResult DeleteConfirm(int? Id)
         {
-          RdfFile model=  _IRdfFile.Delete(Id);
-            if(model != null)
+
+            RdfFile model = _IRdfFile.Details(Id);
+
+            if (model.UserId == User.Identity.Name)
             {
-                TempData["message"] = string.Format("{0} has been deleted successfully", model.FileName);
+                RdfFile model_deleted = _IRdfFile.Delete(Id);
+
+                if (model_deleted != null)
+                {
+                    TempData["message"] = string.Format("{0} has been deleted successfully", model.FileName);
+                }
+                return RedirectToAction("LoadOwlPublicFiles");
             }
+            TempData["message"] = string.Format("You Can't Delete this File {0} , it is not your file.", model.FileName);
+            
             return RedirectToAction("LoadOwlPublicFiles");
         }
         public ActionResult LoadOwlPublicFiles()
@@ -175,7 +185,7 @@ namespace RDFMVC.Controllers
             writer.WriteEndDocument(); 
             writer.Flush();
             writer.Close(); 
-            TempData["FileSelected"] = string.Format("You Have Select the File" + " " + filename);
+            TempData["message"] = string.Format("You Have Select the File" + " " + filename);
         }
 
     }
