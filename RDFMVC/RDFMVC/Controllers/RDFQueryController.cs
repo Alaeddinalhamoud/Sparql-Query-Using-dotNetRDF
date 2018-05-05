@@ -34,13 +34,20 @@ namespace RDFMVC.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            Query model = new Query();
             string AtacehedFileName = GetAttachedOwlFile();
+            //In case the file deleted from the DB, But still Attatced.
+            if (AtacehedFileName.Equals("Error"))
+            {
+                model.query = "Please, upload your OWL file, or choose one from Rdf Files Tab.";
+            }
+            else { 
 
             TempData["FileName"] = string.Format("You Are Using "+AtacehedFileName);
-
-            Query model = new Query();
+          
             model.query = "select * where { ?subject ?predicate ?object} Limit 10";
-
+             
+            }
             return View(model);
         }
          
@@ -59,7 +66,7 @@ namespace RDFMVC.Controllers
                 //  Graph g = new Graph(tripleCollection); 
                 TripleStore _TripleStore = new TripleStore(); 
             string _OwlFileName = GetAttachedOwlFile(); 
-            if (!_OwlFileName.Equals(""))
+            if (!_OwlFileName.Equals("Error"))
             { 
                 string _OWLFilePath = Server.MapPath("~/DataSets/"+ _OwlFileName); 
                 _TripleStore.LoadFromFile(_OWLFilePath); 
@@ -136,7 +143,7 @@ namespace RDFMVC.Controllers
         {
             Session model_Session = new Session();
             RdfFile model_RdfFile = new RdfFile();
-
+            string FileName=null;
             string CurrentUser = User.Identity.Name;
 
             if (CurrentUser.Equals(""))
@@ -145,12 +152,22 @@ namespace RDFMVC.Controllers
                 CurrentUser = "admin@admin.com";
                 model_Session = _ISession.SessionByUserId(CurrentUser);//To get the FileId from Session Table by UserId
                 model_RdfFile = _IRdfFile.Details(model_Session.FileId);//To get the File Name from RdfFile Table by FileId
+              
             }
             else {
              model_Session = _ISession.SessionByUserId(CurrentUser);//To get the FileId from Session Table by UserId
              model_RdfFile = _IRdfFile.Details(model_Session.FileId);//To get the File Name from RdfFile Table by FileId
+             
             }
-            return model_RdfFile.FileName;
+            if (model_RdfFile == null)
+            {
+             FileName = "Error";
+            }
+            else
+            {
+                FileName = model_RdfFile.FileName;
+            }
+            return FileName;
         }
 
         //Old Verion 1.5
