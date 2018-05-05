@@ -8,3 +8,4 @@ You can upload your owl file and query it.
 
 Demo:
 http://sparql.a-hamoud.com/Home/Index
+http://www.a-hamoud.com/Post/details/2141-sparql-query-using-dotnotrdf-api
